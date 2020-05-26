@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Employee index{% endblock %}
+
+{% block body %}
+    <h1>Employee index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Sector</th>
+                <th> </th>
+                <th>Photo</th>
+	{% if is_granted('ROLE_USER') %}
+                <th>actions</th>
+    {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            <tr>
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.firstname }}</td>
+                <td>{{ employee.lastname }}</td>
+                <td>{{ employee.sector }}</td>
+                {% if (employee.sector == 'hiring') %}
+                    <td><div style="background-color:red; width:15px; height:15px;" ></div></td>
+                {% elseif (employee.sector == 'IT') %}
+                    <td><div style="background-color:orange; width:15px; height:15px;" ></div></td>
+                {% elseif (employee.sector == 'accounting') %}
+                    <td><div style="background-color:green; width:15px; height:15px;" ></div></td>
+                {% elseif (employee.sector == 'management') %}
+                    <td><div style="background-color:cyan; width:15px; height:15px;" ></div></td>
+                {% endif %}
+                <td>{{ employee.photo }}</td>
+
+	{% if is_granted('ROLE_USER') %}
+                <td>
+                    <a href="{{ path('employee_show', {'id': employee.id}) }}">show</a>
+                    <a href="{{ path('employee_edit', {'id': employee.id}) }}">edit</a>
+                </td>
+    {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+	{% if is_granted('ROLE_USER') %}
+            <a href="{{ path('employee_new') }}">Create new</a>
+    {% endif %}
+    
+{% endblock %}
